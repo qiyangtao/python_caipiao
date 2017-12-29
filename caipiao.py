@@ -10,59 +10,68 @@ def chongqing():
     url = 'http://www.cqcp.net/game/ssc/'
     header_link = {'User-Agent': 'Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) ' +
                                  'AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.94 Mobile Safari/537.36'}
-    request = urllib2.Request(url=url, headers=header_link)
-    response = urllib2.urlopen(request)
-    content = response.read()
-    pattern = re.compile('([0-9])-([0-9])-([0-9])-([0-9])-([0-9])')
-    num = pattern.search(content)
-    list_cq = num.group().split('-')
-    total = 0
-    for i in list_cq:
-        total = total + int(i)
-    if total > 34 or total < 11:
-        string = ('重庆总和：') + str(total) + ':' + str(list_cq)
-        return string
+    try:
+        request = urllib2.Request(url=url, headers=header_link)
+        response = urllib2.urlopen(request)
+        content = response.read()
+        pattern = re.compile('([0-9])-([0-9])-([0-9])-([0-9])-([0-9])')
+        num = pattern.search(content)
+        list_cq = num.group().split('-')
+        total = 0
+        for i in list_cq:
+            total = total + int(i)
+        if total > 34 or total < 11:
+            string = ('重庆总和：') + str(total) + ':' + str(list_cq)
+            return string
+    except urllib2.HTTPError:
+        return ('cq网络请求错误')
 
 
 def tianjin():
     url = 'https://shishicai.cjcp.com.cn/tianjin/kaijiang/'
     header_link = {'User-Agent': 'Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) ' +
                                  'AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.94 Mobile Safari/537.36'}
-    request = urllib2.Request(url=url, headers=header_link)
-    response = urllib2.urlopen(request)
-    content = response.read()
-    pattern = re.compile('<div class="kjjg_hm_bg">.*?([0-9]).*<\/div>')
-    num = pattern.search(content)
-    nums = num.group()
-    list_tj = []
-    total = 0
-    for i in nums:
-        if i.isdigit():
-            total = total + int(i)
-            list_tj.append(i)
-    if total > 34 or total < 11:
-        string = ('天津总和：') + str(total) + ':' + str(list_tj)
-        return string
+    try:
+        request = urllib2.Request(url=url, headers=header_link)
+        response = urllib2.urlopen(request)
+        content = response.read()
+        pattern = re.compile('<div class="kjjg_hm_bg">.*?([0-9]).*<\/div>')
+        num = pattern.search(content)
+        nums = num.group()
+        list_tj = []
+        total = 0
+        for i in nums:
+            if i.isdigit():
+                total = total + int(i)
+                list_tj.append(i)
+        if total > 34 or total < 11:
+            string = ('天津总和：') + str(total) + ':' + str(list_tj)
+            return string
+    except urllib2.HTTPError:
+        return ('tj网络请求错误')
 
 def xinjiang():
     url = 'https://shishicai.cjcp.com.cn/xinjiang/kaijiang/'
     header_link = {'User-Agent': 'Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) ' +
                                  'AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.94 Mobile Safari/537.36'}
-    request = urllib2.Request(url=url, headers=header_link)
-    response = urllib2.urlopen(request)
-    content = response.read()
-    pattern = re.compile('<div class="kjjg_hm_bg">.*?([0-9]).*<\/div>')
-    num = pattern.search(content)
-    nums = num.group()
-    list_xj = []
-    total = 0
-    for i in nums:
-        if i.isdigit():
-            total = total + int(i)
-            list_xj.append(i)
-    if total > 34 or total < 11:
-        string = ('新疆总和：') + str(total) + ':' + str(list_xj)
-        return string
+    try:
+        request = urllib2.Request(url=url, headers=header_link)
+        response = urllib2.urlopen(request)
+        content = response.read()
+        pattern = re.compile('<div class="kjjg_hm_bg">.*?([0-9]).*<\/div>')
+        num = pattern.search(content)
+        nums = num.group()
+        list_xj = []
+        total = 0
+        for i in nums:
+            if i.isdigit():
+                total = total + int(i)
+                list_xj.append(i)
+        if total > 34 or total < 11:
+            string = ('新疆总和：') + str(total) + ':' + str(list_xj)
+            return string
+    except urllib2.HTTPError:
+        return ('xj网络请求错误')
 
 
 def beijing():
@@ -110,4 +119,4 @@ if __name__ == '__main__':
             data = cq + '\n' + tj + '\n' + xj
             sender(data)
         gc.collect()
-        time.sleep(200)
+        time.sleep(100)
