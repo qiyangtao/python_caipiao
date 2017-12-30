@@ -4,7 +4,7 @@ import requests
 import re
 import json
 import time
-import gc1
+import gc
 
 
 def chongqing():
