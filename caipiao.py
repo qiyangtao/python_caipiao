@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import urllib2
+import requests
 import re
 import json
 import time
@@ -75,20 +76,27 @@ def xinjiang():
 
 
 def beijing():
-    url = 'http://smwap.playgamings.com/'
+    url = 'http://apicg011.ddplayers.com/api/public/LotteryTrend'
     header_link = {'User-Agent': 'Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) ' +
                                  'AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.94 Mobile Safari/537.36'}
-    request = urllib2.Request(url=url, headers=header_link)
-    response = urllib2.urlopen(request)
-    content = response.read()
-    pattern = re.compile('<p class="last-time last_open_5">([0-9]).*<\/p>')
-    num = pattern.search(content)
-    nums = num.group()
-    b = []
-    for i in nums:
-        if i.isdigit():
-            b.append(i)
-    return (b[1:])
+    params = {
+        'GID':15,
+        'Count':1
+    }
+    try:
+        request = requests.get(url, params)
+        r_js = request.json()
+        list_bj = (r_js['data']['result'][0]['Result'])
+        total = 0
+        for i in range(0,9,2):
+            total = total + int(list_bj[i])
+        if total > 34 or total < 11:
+            string = ('北京总和：') + str(total) + ':' + str(list_bj)
+            return string
+    except requests.HTTPError:
+        return ('bj网络请求错误')
+    except KeyError:
+        pass
 
 def sender(parm):
     url = 'https://oapi.dingtalk.com/robot/send?access_token=59f0284c9b9c481799b71c35985081262fde23c91a4791609db5cdb0242da1f2'
@@ -111,12 +119,14 @@ def sender(parm):
     urllib2.urlopen(request)
 
 if __name__ == '__main__':
+    print ('program is starting...')
     while 1:
+        bj = str(beijing())
         cq = str(chongqing())
         tj = str(tianjin())
         xj = str(xinjiang())
-        if cq != 'None' or tj != 'None' or xj != 'None':
-            data = cq + '\n' + tj + '\n' + xj
+        if cq != 'None' or tj != 'None' or xj != 'None' or bj != 'None':
+            data = cq + '\n' + tj + '\n' + xj  + '\n' + bj
             sender(data)
         gc.collect()
-        time.sleep(100)
+        time.sleep(200)
